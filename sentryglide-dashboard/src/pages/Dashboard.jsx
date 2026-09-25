@@ -1,9 +1,19 @@
-// src/pages/Dashboard.jsx
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useAuthStore } from '../store/useAuthStore';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Plus, Activity, BatteryCharging, X } from 'lucide-react';
+import { LogOut, Plus, Activity, BatteryCharging, X, AlertTriangle, MapPin } from 'lucide-react';
+import CartDetailsModal from '../components/CartDetailsModal';
+import { io } from 'socket.io-client';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+const binColors = {
+  yellow: 'bg-yellow-400',
+  red: 'bg-red-500',
+  white: 'bg-slate-300 border border-slate-400', 
+  blue: 'bg-blue-500'
+};
 
 export default function Dashboard() {
   const { hospital, token, logout } = useAuthStore();
@@ -11,11 +21,14 @@ export default function Dashboard() {
   const [dustbins, setDustbins] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   
-  // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [serialNumber, setSerialNumber] = useState('');
+  const [location, setLocation] = useState(''); // New state for Location
   const [modalError, setModalError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedCart, setSelectedCart] = useState(null);
+
+  const alertHistory = useRef({});
 
   useEffect(() => {
     const fetchFleet = async () => {
@@ -30,7 +43,52 @@ export default function Dashboard() {
         setIsLoading(false);
       }
     };
-    fetchFleet();
+
+    fetchFleet(); 
+    
+    const socket = io('http://localhost:5000');
+
+    socket.on('cart-updated', (updatedCart) => {
+      setDustbins((currentDustbins) => {
+        const ownsCart = currentDustbins.some(cart => cart._id === updatedCart._id);
+        if (!ownsCart) return currentDustbins;
+
+        return currentDustbins.map(cart => 
+          cart._id === updatedCart._id ? updatedCart : cart
+        );
+      });
+      
+      setSelectedCart((currentSelected) => {
+        if (currentSelected && currentSelected._id === updatedCart._id) {
+          return updatedCart;
+        }
+        return currentSelected;
+      });
+
+      const { _id, serialNumber, batteryLevel, capacity, location: cartLocation } = updatedCart;
+      
+      if (!alertHistory.current[_id]) {
+        alertHistory.current[_id] = { batteryAlerted: false, capacityAlerted: false };
+      }
+
+      // Updated Toast to include Location
+      if (batteryLevel < 10 && !alertHistory.current[_id].batteryAlerted) {
+        toast.error(`Critical Battery: ${serialNumber} at ${cartLocation} is at ${batteryLevel}%!`);
+        alertHistory.current[_id].batteryAlerted = true;
+      } else if (batteryLevel >= 10) {
+        alertHistory.current[_id].batteryAlerted = false;
+      }
+
+      const isCapacityCritical = Object.values(capacity).some(val => val >= 90);
+      if (isCapacityCritical && !alertHistory.current[_id].capacityAlerted) {
+        toast.warning(`Capacity Alert: ${serialNumber} at ${cartLocation} is nearing maximum limit!`);
+        alertHistory.current[_id].capacityAlerted = true;
+      } else if (!isCapacityCritical) {
+        alertHistory.current[_id].capacityAlerted = false;
+      }
+    });
+
+    return () => socket.disconnect();
   }, [token]);
 
   const handleLogout = () => {
@@ -44,15 +102,16 @@ export default function Dashboard() {
     setIsSubmitting(true);
 
     try {
+      // Pass location to backend
       const response = await axios.post('http://localhost:5000/api/dustbins', 
-        { serialNumber },
+        { serialNumber, location },
         { headers: { Authorization: `Bearer ${token}` }}
       );
       
-      // Add new cart to UI instantly
       setDustbins([...dustbins, response.data]);
       setIsModalOpen(false);
       setSerialNumber('');
+      setLocation(''); // Reset form
     } catch (error) {
       setModalError(error.response?.data?.message || 'Failed to add dustbin');
     } finally {
@@ -62,7 +121,9 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
-      {/* Navigation */}
+      
+      <ToastContainer position="top-right" autoClose={5000} theme="colored" />
+
       <nav className="flex items-center justify-between bg-white px-8 py-4 shadow-sm">
         <div>
           <h1 className="text-xl font-bold text-blue-700">SentryGlide Fleet Command</h1>
@@ -84,11 +145,10 @@ export default function Dashboard() {
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="p-8">
         <h2 className="mb-6 text-lg font-semibold text-slate-800">Active Units ({dustbins.length})</h2>
         
-        {isLoading ? (
+        {isLoading && dustbins.length === 0 ? (
           <div className="text-slate-500">Loading fleet data...</div>
         ) : dustbins.length === 0 ? (
           <div className="rounded-xl border border-dashed border-slate-300 p-12 text-center text-slate-500">
@@ -96,35 +156,83 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {dustbins.map((cart) => (
-              <div key={cart._id} className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-slate-200 transition-shadow hover:shadow-md">
-                <div className="mb-4 flex items-start justify-between">
+            {dustbins.map((cart) => {
+              const isBatteryCritical = cart.batteryLevel < 10;
+              const isCapacityCritical = Object.values(cart.capacity).some(val => val >= 90);
+              const hasAlert = isBatteryCritical || isCapacityCritical;
+
+              return (
+                <div 
+                  key={cart._id} 
+                  onClick={() => setSelectedCart(cart)}
+                  className={`cursor-pointer flex flex-col justify-between rounded-xl p-5 shadow-sm ring-1 transition-shadow hover:shadow-md ${
+                    hasAlert 
+                      ? 'bg-red-50/50 ring-red-300 hover:ring-red-400' 
+                      : 'bg-white ring-slate-200 hover:ring-blue-200'
+                  }`}
+                >
+                  
                   <div>
-                    <h3 className="font-bold text-slate-800">Unit: {cart.serialNumber}</h3>
+                    <div className="mb-4 flex items-start justify-between">
+                      <div>
+                        <h3 className={`font-bold flex items-center gap-2 ${hasAlert ? 'text-red-700' : 'text-slate-800'}`}>
+                          {hasAlert && <AlertTriangle className="h-4 w-4" />}
+                          Unit: {cart.serialNumber}
+                        </h3>
+                        {/* Display location on the card */}
+                        <span className={`mt-1 flex items-center gap-1 text-xs font-medium ${hasAlert ? 'text-red-500' : 'text-slate-500'}`}>
+                          <MapPin className="h-3 w-3" /> {cart.location}
+                        </span>
+                      </div>
+                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                        cart.status === 'Standby' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+                      }`}>
+                        {cart.status}
+                      </span>
+                    </div>
+                    
+                    <div className="mb-4 flex items-center justify-between text-sm font-medium text-slate-600">
+                      <span className={`flex items-center gap-1.5 ${isBatteryCritical ? 'text-red-600 font-bold' : ''}`}>
+                        <BatteryCharging className={`h-4 w-4 ${isBatteryCritical ? 'text-red-600' : (cart.batteryLevel > 20 ? 'text-emerald-500' : 'text-amber-500')}`} />
+                        {cart.batteryLevel}%
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <Activity className="h-4 w-4 text-blue-500" /> Active
+                      </span>
+                    </div>
                   </div>
-                  <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
-                    cart.status === 'Standby' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
-                  }`}>
-                    {cart.status}
-                  </span>
+
+                  <div className="border-t border-slate-100/80 pt-4">
+                    <p className={`mb-2 text-xs font-semibold uppercase tracking-wider ${isCapacityCritical ? 'text-red-500' : 'text-slate-500'}`}>
+                      Internal Capacity
+                    </p>
+                    <div className="grid grid-cols-4 gap-2">
+                      {['yellow', 'red', 'white', 'blue'].map((color) => {
+                        const isBinFull = cart.capacity[color] >= 90;
+                        return (
+                          <div key={color} className="flex flex-col gap-1">
+                            <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
+                              <div 
+                                className={`h-full rounded-full ${binColors[color]}`} 
+                                style={{ width: `${cart.capacity[color]}%` }} 
+                              />
+                            </div>
+                            <span className={`text-center text-[10px] font-bold uppercase ${isBinFull ? 'text-red-600' : 'text-slate-400'}`}>
+                              {cart.capacity[color]}%
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                 </div>
-                
-                <div className="flex items-center justify-between border-t border-slate-100 pt-4 text-sm font-medium text-slate-600">
-                  <span className="flex items-center gap-1.5">
-                    <BatteryCharging className="h-4 w-4 text-emerald-500" />
-                    {cart.batteryLevel}%
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Activity className="h-4 w-4 text-blue-500" /> Active
-                  </span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </main>
 
-      {/* Add Cart Modal Overlay */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-sm">
           <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
@@ -154,6 +262,19 @@ export default function Dashboard() {
                 />
               </div>
 
+              {/* New Location Field */}
+              <div>
+                <label className="mb-1.5 block text-sm font-semibold text-slate-700">Cart Assignment Location</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Ward 3, North Wing"
+                  className="w-full rounded-lg border border-slate-300 px-4 py-2.5 text-slate-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  required
+                />
+              </div>
+
               <div className="flex justify-end gap-3 pt-4">
                 <button 
                   type="button" 
@@ -174,6 +295,12 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
+      <CartDetailsModal 
+        cart={selectedCart} 
+        onClose={() => setSelectedCart(null)} 
+      />
+      
     </div>
   );
 }
