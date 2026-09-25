@@ -1,0 +1,14 @@
+true \ predicted,urine_bag,test_tube,medical_glasses,gauze,glove_pair_surgery,glove_single_nitrile,glove_single_surgery,medical_cap,shoe_cover_pair,glove_single_latex,glove_pair_nitrile,shoe_cover_single,glove_pair_latex
+urine_bag,14,0,1,0,0,0,0,0,0,0,0,0,0
+test_tube,0,17,0,0,0,0,0,0,0,1,0,0,0
+medical_glasses,0,1,15,0,0,0,0,0,0,0,0,0,0
+gauze,0,1,0,17,0,0,0,0,0,0,0,0,2
+glove_pair_surgery,0,0,0,0,13,0,2,0,0,0,0,0,0
+glove_single_nitrile,0,0,0,0,0,9,0,0,0,0,8,0,0
+glove_single_surgery,0,0,0,0,0,0,15,0,0,0,0,0,0
+medical_cap,0,0,0,0,0,0,0,15,0,0,0,0,0
+shoe_cover_pair,0,0,0,0,0,0,0,0,14,0,0,4,0
+glove_single_latex,0,2,0,0,0,0,0,0,0,9,0,0,4
+glove_pair_nitrile,0,0,0,0,0,0,0,0,0,0,16,0,0
+shoe_cover_single,0,0,0,0,0,0,0,0,4,0,0,12,0
+glove_pair_latex,0,0,0,0,0,0,0,0,0,5,0,0,11

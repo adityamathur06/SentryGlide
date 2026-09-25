@@ -1,0 +1,36 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "SentryGlide: simulate 20 items",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "bmwvision",
+      "args": ["run", "--sim", "--cycles", "20"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "SentryGlide: simulated calibration",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "bmwvision",
+      "args": ["calibrate", "--sim"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "SentryGlide: test suite",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["-q", "tests"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    }
+  ]
+}
+

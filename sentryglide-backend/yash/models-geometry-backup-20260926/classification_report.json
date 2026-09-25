@@ -1,0 +1,295 @@
+{
+  "accuracy": 0.8349056603773585,
+  "classes": [
+    "urine_bag",
+    "test_tube",
+    "medical_glasses",
+    "gauze",
+    "glove_pair_surgery",
+    "glove_single_nitrile",
+    "glove_single_surgery",
+    "medical_cap",
+    "shoe_cover_pair",
+    "glove_single_latex",
+    "glove_pair_nitrile",
+    "shoe_cover_single",
+    "glove_pair_latex"
+  ],
+  "per_class": {
+    "urine_bag": {
+      "precision": 1.0,
+      "recall": 0.9333333333333333,
+      "f1": 0.9655172413793104,
+      "support": 15
+    },
+    "test_tube": {
+      "precision": 0.8095238095238095,
+      "recall": 0.9444444444444444,
+      "f1": 0.8717948717948718,
+      "support": 18
+    },
+    "medical_glasses": {
+      "precision": 0.9375,
+      "recall": 0.9375,
+      "f1": 0.9375,
+      "support": 16
+    },
+    "gauze": {
+      "precision": 1.0,
+      "recall": 0.85,
+      "f1": 0.9189189189189189,
+      "support": 20
+    },
+    "glove_pair_surgery": {
+      "precision": 1.0,
+      "recall": 0.8666666666666667,
+      "f1": 0.9285714285714286,
+      "support": 15
+    },
+    "glove_single_nitrile": {
+      "precision": 1.0,
+      "recall": 0.5294117647058824,
+      "f1": 0.6923076923076924,
+      "support": 17
+    },
+    "glove_single_surgery": {
+      "precision": 0.8823529411764706,
+      "recall": 1.0,
+      "f1": 0.9375,
+      "support": 15
+    },
+    "medical_cap": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 15
+    },
+    "shoe_cover_pair": {
+      "precision": 0.7777777777777778,
+      "recall": 0.7777777777777778,
+      "f1": 0.7777777777777778,
+      "support": 18
+    },
+    "glove_single_latex": {
+      "precision": 0.6,
+      "recall": 0.6,
+      "f1": 0.6,
+      "support": 15
+    },
+    "glove_pair_nitrile": {
+      "precision": 0.6666666666666666,
+      "recall": 1.0,
+      "f1": 0.8,
+      "support": 16
+    },
+    "shoe_cover_single": {
+      "precision": 0.75,
+      "recall": 0.75,
+      "f1": 0.75,
+      "support": 16
+    },
+    "glove_pair_latex": {
+      "precision": 0.6470588235294118,
+      "recall": 0.6875,
+      "f1": 0.6666666666666667,
+      "support": 16
+    }
+  },
+  "confusion_matrix": [
+    [
+      14,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      17,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      15,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      17,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      13,
+      0,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      9,
+      0,
+      0,
+      0,
+      0,
+      8,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      15,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      15,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      14,
+      0,
+      0,
+      4,
+      0
+    ],
+    [
+      0,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      9,
+      0,
+      0,
+      4
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      16,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      4,
+      0,
+      0,
+      12,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      11
+    ]
+  ]
+}

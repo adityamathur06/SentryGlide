@@ -1,0 +1,20 @@
+{
+  "total_xml": 1415,
+  "splits": {
+    "train": {
+      "images": 990,
+      "annotations": 990,
+      "classes": 13
+    },
+    "val": {
+      "images": 212,
+      "annotations": 212,
+      "classes": 13
+    },
+    "test": {
+      "images": 213,
+      "annotations": 213,
+      "classes": 13
+    }
+  }
+}

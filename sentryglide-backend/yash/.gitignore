@@ -1,0 +1,19 @@
+.venv/
+.pytest_cache/
+web/node_modules/
+web/dist/
+__pycache__/
+*.py[cod]
+
+# Generated calibration, data, models, and run logs
+calib/
+dataset/
+dataset-sim/
+models/
+runs/
+marker_board.png
+decision_report.json
+
+# Editors and operating systems
+.DS_Store
+Thumbs.db

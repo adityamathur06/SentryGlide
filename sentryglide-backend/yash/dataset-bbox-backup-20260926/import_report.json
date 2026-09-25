@@ -1,0 +1,25 @@
+{
+  "source": "E:\\sih\\bmw-vision\\dataset-source\\Medical Waste dataset",
+  "samples": 1415,
+  "classes": {
+    "test_tube": 121,
+    "medical_glasses": 106,
+    "glove_pair_surgery": 100,
+    "glove_single_nitrile": 111,
+    "glove_single_surgery": 102,
+    "gauze": 131,
+    "medical_cap": 102,
+    "shoe_cover_pair": 117,
+    "glove_single_latex": 101,
+    "glove_pair_nitrile": 110,
+    "shoe_cover_single": 104,
+    "glove_pair_latex": 110,
+    "urine_bag": 100
+  },
+  "combined_source_splits": [
+    "train",
+    "val",
+    "test"
+  ],
+  "output_side": 600
+}

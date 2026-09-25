@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sentryglide-bmwvision"
+version = "0.1.0"
+description = "Safety-first vision and routing runtime for the SentryGlide biomedical-waste sorter"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy>=1.24",
+  "opencv-python>=4.8",
+  "pyyaml>=6",
+  "scipy>=1.10",
+  "onnxruntime>=1.16",
+]
+
+[project.optional-dependencies]
+dev = [
+  "onnx>=1.14",
+  "pytest>=7",
+]
+train = [
+  "torch>=2.2",
+  "onnx>=1.14",
+  "matplotlib>=3.8",
+]
+yolo = [
+  "ultralytics>=8.3,<9",
+  "matplotlib>=3.8",
+]
+web = [
+  "fastapi>=0.115",
+  "python-multipart>=0.0.9",
+  "uvicorn[standard]>=0.30",
+]
+realsense = ["pyrealsense2"]
+
+[project.scripts]
+bmwvision = "bmwvision.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["bmwvision*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

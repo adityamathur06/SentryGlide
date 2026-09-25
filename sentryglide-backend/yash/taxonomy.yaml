@@ -1,0 +1,54 @@
+# Fine-grained object types -> bin. `null` means not a valid waste item (INVALID -> hold).
+# Based on Schedule I of the Bio-Medical Waste Management Rules 2016 (as amended 2018).
+# Verify every row with your institution's infection-control officer before use,
+# and extend the list to match the items your hospital actually generates.
+# The classifier's type names must match these keys exactly.
+types:
+  needle: WHITE
+  syringe_with_fixed_needle: WHITE
+  scalpel_blade: WHITE
+  lancet: WHITE
+  syringe_without_needle: RED
+  iv_set_tubing: RED
+  catheter: RED
+  urine_bag: RED
+  gloves: RED
+  vacutainer: RED
+  plastic_bottle: RED
+  soiled_gauze_dressing: YELLOW
+  soiled_cotton: YELLOW
+  plaster_cast: YELLOW
+  glass_vial: BLUE
+  glass_ampoule: BLUE
+  broken_glass: BLUE
+  metal_implant: BLUE
+  invalid: null
+  test_tube: null                    # material is not specified; hold for manual review
+  medical_glasses: RED
+  gauze: YELLOW
+  glove_pair_surgery: RED
+  glove_single_nitrile: RED
+  glove_single_surgery: RED
+  medical_cap: RED
+  shoe_cover_pair: RED
+  glove_single_latex: RED
+  glove_pair_nitrile: RED
+  shoe_cover_single: RED
+  glove_pair_latex: RED
+  body_tissue_or_organ: YELLOW
+  glass_equipment_packaging: BLUE
+  glove_single_surgery: RED
+  mask: YELLOW
+  metal_equipment_packaging: null  # item/material purpose is ambiguous; hold for review
+  organic_waste: YELLOW
+  paper_equipment_packaging: null  # could be uncontaminated general waste; hold for review
+  plastic_equipment_packaging: RED
+  syringe: RED                    # dataset class does not show a fixed needle separately
+  syringe_needle: WHITE
+  tweezers: null                  # reusable instrument vs discarded sharp is ambiguous
+
+# Types that contain metal an inductive sensor can detect. Used only when a metal sensor
+# is fitted (decision.metal_sensor in config.yaml). Types listed in neither list below
+# are treated as non-metal; types in metal_unknown get no update from the sensor.
+metal_types: [needle, syringe_with_fixed_needle, scalpel_blade, lancet, metal_implant]
+metal_unknown: [invalid]

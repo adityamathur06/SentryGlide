@@ -1,0 +1,68 @@
+{
+  "type_names": [
+    "urine_bag",
+    "test_tube",
+    "medical_glasses",
+    "gauze",
+    "glove_pair_surgery",
+    "glove_single_nitrile",
+    "glove_single_surgery",
+    "medical_cap",
+    "shoe_cover_pair",
+    "glove_single_latex",
+    "glove_pair_nitrile",
+    "shoe_cover_single",
+    "glove_pair_latex"
+  ],
+  "input_size": [
+    160,
+    160
+  ],
+  "mean": [
+    0.485,
+    0.456,
+    0.406
+  ],
+  "std": [
+    0.229,
+    0.224,
+    0.225
+  ],
+  "geom_feature_names": [
+    "area_mm2",
+    "length_mm",
+    "width_mm",
+    "elongation",
+    "max_height_mm",
+    "mean_height_mm",
+    "p90_height_mm",
+    "height_std_mm",
+    "volume_mm3",
+    "invalid_depth_frac"
+  ],
+  "geom_mean": [
+    6652.30810546875,
+    114.27114868164062,
+    82.36905670166016,
+    1.5405654907226562,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "geom_std": [
+    4731.390625,
+    35.03897476196289,
+    35.08195495605469,
+    0.47684136033058167,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "temperature": 0.9561222471827695
+}

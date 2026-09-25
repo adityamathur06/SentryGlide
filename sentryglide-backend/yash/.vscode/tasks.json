@@ -1,0 +1,64 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "SentryGlide: install dependencies",
+      "type": "process",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "pip", "install", "-e", ".[dev]"],
+      "options": {"cwd": "${workspaceFolder}"},
+      "problemMatcher": []
+    },
+    {
+      "label": "SentryGlide: run all tests",
+      "type": "process",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "pytest", "-q"],
+      "options": {"cwd": "${workspaceFolder}"},
+      "group": {"kind": "test", "isDefault": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "SentryGlide: run simulation",
+      "type": "process",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "bmwvision", "run", "--sim", "--cycles", "20"],
+      "options": {"cwd": "${workspaceFolder}"},
+      "group": {"kind": "build", "isDefault": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "SentryGlide: generate development dataset",
+      "type": "process",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "bmwvision", "make-sim-dataset", "--out", "dataset-sim"],
+      "options": {"cwd": "${workspaceFolder}"},
+      "problemMatcher": []
+    },
+    {
+      "label": "SentryGlide: train classifier",
+      "type": "process",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "bmwvision", "train", "--dataset", "dataset", "--out", "models"],
+      "options": {"cwd": "${workspaceFolder}"},
+      "problemMatcher": []
+    },
+    {
+      "label": "SentryGlide: calibrate decision layer",
+      "type": "process",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "bmwvision", "fit-decision", "--val", "models\\val.npz", "--meta", "models\\classifier.json", "--bank", "models\\train.npz", "--ood-out", "models\\ood_bank.npz", "--write-meta", "--out", "models\\decision_report.json"],
+      "options": {"cwd": "${workspaceFolder}"},
+      "problemMatcher": []
+    },
+    {
+      "label": "SentryGlide: start upload website",
+      "type": "process",
+      "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "bmwvision.web_api"],
+      "options": {"cwd": "${workspaceFolder}"},
+      "isBackground": true,
+      "problemMatcher": []
+    }
+  ]
+}

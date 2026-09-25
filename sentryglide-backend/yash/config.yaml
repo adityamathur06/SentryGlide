@@ -1,0 +1,102 @@
+# Station configuration. Lengths in mm, times in seconds.
+# Values marked TUNE are starting points; set them from your rig's data.
+
+geometry:
+  plate_mm: [260, 200]            # physical inspection plate, x right, y down
+  roi_mm: [55, 25, 205, 175]      # x0, y0, x1, y1 on the plate (150 x 150 mm)
+  mm_per_px: 0.25                 # rectified ROI resolution -> 600 x 600 px
+  min_feature_mm: 0.5             # thinnest safety-critical feature (25G needle ~0.5 mm;
+                                  # 30G insulin needles ~0.3 mm need ~0.15 mm/px)
+  min_px_across_feature: 2.0
+  markers:
+    dictionary: DICT_4X4_50
+    size_mm: 20
+    positions_mm:                 # top-left corner of each marker on the plate
+      0: [5, 5]
+      1: [235, 5]
+      2: [235, 175]
+      3: [5, 175]
+  max_marker_drift_px: 2.0
+  marker_check_interval_s: 60
+
+reference:
+  n_frames: 30
+  refresh_interval_s: 300
+
+settle:
+  k_frames: 4
+  rgb_delta: 15                   # grey-level change that counts a pixel as changed
+  depth_delta_mm: 5.0             # depth change that counts a pixel as changed
+  max_changed_frac: 0.002         # TUNE: settled when fewer pixels than this changed
+  timeout_s: 3.0
+
+occupancy:
+  lab_thresh: 25.0                # TUNE: Lab distance to empty reference
+  l_weight: 1.0                   # lower (e.g. 0.5) to tolerate shadows
+  height_min_mm: 3.0
+  height_k_noise: 4.0             # per-pixel threshold = max(height_min, k * noise)
+  use_invalid_depth: true         # new depth holes (glass, metal) count as object
+  min_component_area_mm2: 5.0     # area filter; no morphological opening (it erases needles)
+  close_mm: 2.0                   # joins fragments of one object
+  border_margin_mm: 2.0
+  max_total_area_mm2: null        # TUNE from data: largest single item seen in training
+  max_volume_mm3: null
+
+quality:
+  min_sharpness: 0.12             # TUNE: var(Laplacian)/var(intensity) at the object outline
+  max_saturated_frac: 0.15
+  max_motion: 4.0                 # mean abs grey change inside the object region
+
+capture:
+  min_frames: 3
+  max_frames: 10
+  max_quality_failures: 5
+  timeout_s: 4.0
+  min_consistency: 0.8
+
+decision:
+  # Expected-cost rule: route to argmin_k sum_j P(j) C[j][k] if that cost < c_hold, else hold.
+  # PLACEHOLDER costs: set them with your infection-control stakeholders, then tune
+  # c_hold on validation data with `bmwvision fit-decision`.
+  # Rows = true class, columns = routed bin (RED, YELLOW, BLUE, WHITE).
+  cost_matrix:
+    RED:     [0,    5,    5,   2]
+    YELLOW:  [50,   0,   20,   5]
+    BLUE:    [50,  30,    0,   5]
+    WHITE:   [1000, 1000, 200, 0]
+    INVALID: [20,   20,  20,  20]
+  c_hold: 1.0
+  # (true, routed) pairs counted as dangerous when choosing c_hold and verifying.
+  dangerous:
+    - [WHITE, RED]
+    - [WHITE, YELLOW]
+    - [WHITE, BLUE]
+    - [YELLOW, RED]
+    - [BLUE, RED]
+    - [BLUE, YELLOW]
+  max_dangerous_upper: 0.001      # target 95% upper bound on dangerous misroutes per placement
+  metal_sensor:                   # optional inductive sensor, fused as Bayesian evidence
+    enabled: true
+    p_detect: 0.95                # TUNE: measure on the rig with the thinnest needles; be conservative
+    p_false_alarm: 0.01           # TUNE
+  ood_enabled: true
+
+controller:
+  poll_timeout_s: 0.5
+  ack_timeout_s: 1.0
+  drop_timeout_s: 3.0
+
+model:
+  onnx: models/classifier.onnx
+  meta: models/classifier.json    # type names, input size, normalisation, temperature
+  ood_bank: models/ood_bank.npz   # training embeddings + threshold
+
+taxonomy: taxonomy.yaml
+
+logging:
+  dir: runs
+  save_frames: true
+
+collect:
+  frames_per_placement: 3
+  min_gap_s: 0.15

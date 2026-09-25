@@ -1,0 +1,129 @@
+{
+  "development_model": true,
+  "dataset": "E:\\sih\\bmw-vision\\dataset-aligned",
+  "split_frames": {
+    "train": 991,
+    "val": 212,
+    "test": 212
+  },
+  "split_physical_ids": {
+    "train": 991,
+    "val": 212,
+    "test": 212
+  },
+  "test_accuracy": 0.8349056603773585,
+  "best_validation_accuracy": 0.9150943396226415,
+  "history": [
+    {
+      "epoch": 1,
+      "loss": 2.055787429679655,
+      "val_accuracy": 0.38207547169811323
+    },
+    {
+      "epoch": 2,
+      "loss": 1.296388181980876,
+      "val_accuracy": 0.6320754716981132
+    },
+    {
+      "epoch": 3,
+      "loss": 0.9593069746443771,
+      "val_accuracy": 0.6509433962264151
+    },
+    {
+      "epoch": 4,
+      "loss": 0.7993036512168938,
+      "val_accuracy": 0.7122641509433962
+    },
+    {
+      "epoch": 5,
+      "loss": 0.6784943870891836,
+      "val_accuracy": 0.7311320754716981
+    },
+    {
+      "epoch": 6,
+      "loss": 0.6254689420388276,
+      "val_accuracy": 0.6745283018867925
+    },
+    {
+      "epoch": 7,
+      "loss": 0.5580776998421739,
+      "val_accuracy": 0.6745283018867925
+    },
+    {
+      "epoch": 8,
+      "loss": 0.5229774955904448,
+      "val_accuracy": 0.8207547169811321
+    },
+    {
+      "epoch": 9,
+      "loss": 0.4766335249789187,
+      "val_accuracy": 0.7405660377358491
+    },
+    {
+      "epoch": 10,
+      "loss": 0.47479869363647176,
+      "val_accuracy": 0.6320754716981132
+    },
+    {
+      "epoch": 11,
+      "loss": 0.4592054431842627,
+      "val_accuracy": 0.75
+    },
+    {
+      "epoch": 12,
+      "loss": 0.4298123026230982,
+      "val_accuracy": 0.7358490566037735
+    },
+    {
+      "epoch": 13,
+      "loss": 0.4036280205764636,
+      "val_accuracy": 0.8113207547169812
+    },
+    {
+      "epoch": 14,
+      "loss": 0.36249566472142064,
+      "val_accuracy": 0.8537735849056604
+    },
+    {
+      "epoch": 15,
+      "loss": 0.34454287394625627,
+      "val_accuracy": 0.6839622641509434
+    },
+    {
+      "epoch": 16,
+      "loss": 0.37345443189324573,
+      "val_accuracy": 0.9150943396226415
+    },
+    {
+      "epoch": 17,
+      "loss": 0.3537230357963791,
+      "val_accuracy": 0.8018867924528302
+    },
+    {
+      "epoch": 18,
+      "loss": 0.3356341847136812,
+      "val_accuracy": 0.7877358490566038
+    },
+    {
+      "epoch": 19,
+      "loss": 0.3206766355711324,
+      "val_accuracy": 0.8301886792452831
+    },
+    {
+      "epoch": 20,
+      "loss": 0.2777600245537118,
+      "val_accuracy": 0.8113207547169812
+    }
+  ],
+  "artifacts": [
+    "classifier.onnx",
+    "classifier.json",
+    "ood_bank.npz",
+    "train.npz",
+    "val.npz",
+    "test.npz",
+    "confusion_matrix.csv",
+    "confusion_matrix.png",
+    "classification_report.json"
+  ]
+}

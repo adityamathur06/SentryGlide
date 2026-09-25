@@ -1,0 +1,2 @@
+[console_scripts]
+bmwvision = bmwvision.cli:main

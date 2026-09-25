@@ -1,0 +1,9 @@
+numpy>=1.24
+opencv-python>=4.8          # ArUco is in the main package since 4.7
+pyyaml>=6
+scipy>=1.10
+onnxruntime>=1.16
+ultralytics>=8.3,<9     # uploaded YOLOv8 classification notebook
+pytest>=7          # tests
+onnx>=1.14         # tests only
+# pyrealsense2     # for RealSenseCamera on the rig
