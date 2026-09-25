@@ -1,13 +1,14 @@
+// src/store/useAuthStore.js
 import { create } from 'zustand';
 
-const useAuthStore = create((set) => ({
+export const useAuthStore = create((set) => ({
   hospital: JSON.parse(localStorage.getItem('hospital')) || null,
   token: localStorage.getItem('token') || null,
   
-  login: (hospitalData, token) => {
-    localStorage.setItem('hospital', JSON.stringify(hospitalData));
+  login: (hospital, token) => {
+    localStorage.setItem('hospital', JSON.stringify(hospital));
     localStorage.setItem('token', token);
-    set({ hospital: hospitalData, token });
+    set({ hospital, token });
   },
   
   logout: () => {
@@ -16,5 +17,3 @@ const useAuthStore = create((set) => ({
     set({ hospital: null, token: null });
   }
 }));
-
-export default useAuthStore;
