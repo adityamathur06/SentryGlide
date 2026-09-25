@@ -1,3 +1,4 @@
+// src/pages/Dashboard.jsx
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useAuthStore } from '../store/useAuthStore';
@@ -23,7 +24,7 @@ export default function Dashboard() {
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [serialNumber, setSerialNumber] = useState('');
-  const [location, setLocation] = useState(''); // New state for Location
+  const [location, setLocation] = useState('');
   const [modalError, setModalError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedCart, setSelectedCart] = useState(null);
@@ -71,7 +72,6 @@ export default function Dashboard() {
         alertHistory.current[_id] = { batteryAlerted: false, capacityAlerted: false };
       }
 
-      // Updated Toast to include Location
       if (batteryLevel < 10 && !alertHistory.current[_id].batteryAlerted) {
         toast.error(`Critical Battery: ${serialNumber} at ${cartLocation} is at ${batteryLevel}%!`);
         alertHistory.current[_id].batteryAlerted = true;
@@ -102,7 +102,6 @@ export default function Dashboard() {
     setIsSubmitting(true);
 
     try {
-      // Pass location to backend
       const response = await axios.post('http://localhost:5000/api/dustbins', 
         { serialNumber, location },
         { headers: { Authorization: `Bearer ${token}` }}
@@ -111,7 +110,7 @@ export default function Dashboard() {
       setDustbins([...dustbins, response.data]);
       setIsModalOpen(false);
       setSerialNumber('');
-      setLocation(''); // Reset form
+      setLocation('');
     } catch (error) {
       setModalError(error.response?.data?.message || 'Failed to add dustbin');
     } finally {
@@ -124,12 +123,21 @@ export default function Dashboard() {
       
       <ToastContainer position="top-right" autoClose={5000} theme="colored" />
 
-      <nav className="flex items-center justify-between bg-white px-8 py-4 shadow-sm">
-        <div>
-          <h1 className="text-xl font-bold text-blue-700">SentryGlide Fleet Command</h1>
-          <p className="text-sm font-medium text-slate-500">{hospital?.name}</p>
+      {/* Navigation - Updated Layout */}
+      <nav className="relative flex items-center justify-between bg-white px-8 py-4 shadow-sm">
+        
+        {/* Left: Hospital Name */}
+        <div className="flex flex-1 items-center">
+          <p className="text-lg font-bold text-slate-700">{hospital?.name}</p>
         </div>
-        <div className="flex items-center gap-4">
+
+        {/* Center: Title (Absolutely positioned to guarantee true center) */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <h1 className="text-2xl font-extrabold tracking-tight text-blue-700">SentryGlide Hub</h1>
+        </div>
+
+        {/* Right: Actions */}
+        <div className="flex flex-1 items-center justify-end gap-4">
           <button 
             onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
@@ -179,7 +187,6 @@ export default function Dashboard() {
                           {hasAlert && <AlertTriangle className="h-4 w-4" />}
                           Unit: {cart.serialNumber}
                         </h3>
-                        {/* Display location on the card */}
                         <span className={`mt-1 flex items-center gap-1 text-xs font-medium ${hasAlert ? 'text-red-500' : 'text-slate-500'}`}>
                           <MapPin className="h-3 w-3" /> {cart.location}
                         </span>
@@ -262,7 +269,6 @@ export default function Dashboard() {
                 />
               </div>
 
-              {/* New Location Field */}
               <div>
                 <label className="mb-1.5 block text-sm font-semibold text-slate-700">Cart Assignment Location</label>
                 <input
